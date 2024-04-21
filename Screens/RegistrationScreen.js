@@ -1,53 +1,101 @@
 import {
   Image,
   ImageBackground,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
   Pressable,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import BgImage from "../assets/images/background.jpg";
 import { globalStyles } from "../assets/GlobalStyles";
 import AddSVG from "../components/AddSvg";
+import { useState } from "react";
+import { FocusingInput } from "../components/FocusingInput";
 
 const RegistrationScreen = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  const onRegister = () => {
+    console.log("Username: ", name, "Email: ", email, "Password: ", password);
+  };
+
   return (
-    <ImageBackground source={BgImage} style={{ width: "100%", height: "100%" }}>
-      <View style={styles.regContainer}>
-        <Text style={styles.regText}>Реєстрація</Text>
-        <TextInput placeholder="Логін" style={styles.input}></TextInput>
-        <TextInput
-          placeholder="Адреса електронної пошти"
-          style={styles.input}
-        ></TextInput>
-        <TextInput placeholder="Пароль" style={styles.input}></TextInput>
-        <TouchableOpacity style={styles.regButton}>
-          <Text style={styles.buttonText}>Зареєстуватися</Text>
-        </TouchableOpacity>
-        <Pressable>
-          <Text style={styles.loginText}>Вже є акаунт? Увійти</Text>
-        </Pressable>
-        <View style={styles.avatarContainer}>
-          <Pressable style={styles.addBtn}>
-            <AddSVG />
-            <Image source={require("../assets/images/add.svg")} />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <ImageBackground source={BgImage} style={styles.container}>
+        <View style={styles.regContainer}>
+          <Text style={styles.regText}>Реєстрація</Text>
+          <KeyboardAvoidingView
+            style={styles.formWrapper}
+            behavior={Platform.OS == "ios" ? "padding" : "height"}
+          >
+            <FocusingInput
+              placeholder="Логін"
+              onChangeText={setName}
+              style={styles.input}
+            />
+            <FocusingInput
+              placeholder="Адреса електронної пошти"
+              autoComplete="email"
+              keyboardType="email-address"
+              onChangeText={setEmail}
+              style={[styles.input]}
+            />
+            <View>
+              <FocusingInput
+                placeholder="Пароль"
+                autoComplete="password"
+                secureTextEntry={!showPassword}
+                onChangeText={setPassword}
+                style={styles.input}
+              />
+              <TouchableOpacity
+                style={styles.showPassBtn}
+                onPress={() => setShowPassword((prev) => !prev)}
+              >
+                <Text style={styles.loginText}>
+                  {showPassword ? "Сховати" : "Показати"}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </KeyboardAvoidingView>
+
+          <TouchableOpacity style={styles.regButton} onPress={onRegister}>
+            <Text style={styles.buttonText}>Зареєстуватися</Text>
+          </TouchableOpacity>
+          <Pressable>
+            <Text style={styles.loginText}>Вже є акаунт? Увійти</Text>
           </Pressable>
+
+          <View style={styles.avatarContainer}>
+            <Pressable style={styles.addBtn}>
+              <AddSVG />
+              <Image source={require("../assets/images/add.svg")} />
+            </Pressable>
+          </View>
         </View>
-      </View>
-    </ImageBackground>
+      </ImageBackground>
+    </TouchableWithoutFeedback>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "flex-end",
+    alignItems: "center",
+  },
   regContainer: {
-    position: "absolute",
-    bottom: 0,
     display: "flex",
     alignItems: "center",
     width: "100%",
-    height: 549,
     paddingTop: 92,
     paddingBottom: 68,
     paddingLeft: 16,
@@ -55,6 +103,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
+  },
+  formWrapper: {
+    flexGrow: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
   regText: {
     fontFamily: "Roboto-Bold",
@@ -71,8 +124,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#E8E8E8",
     borderStyle: "solid",
-    color: "#BDBDBD",
     ...globalStyles.text,
+  },
+  inputFocused: {
+    borderColor: "#FF6C00",
   },
   regButton: {
     display: "flex",
@@ -105,6 +160,11 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 81,
     right: -12,
+  },
+  showPassBtn: {
+    position: "absolute",
+    right: 16,
+    top: 15,
   },
 });
 

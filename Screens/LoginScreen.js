@@ -1,38 +1,80 @@
 import {
   ImageBackground,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
   Pressable,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import BgImage from "../assets/images/background.jpg";
 import { globalStyles } from "../assets/GlobalStyles";
+import { useState } from "react";
+import { FocusingInput } from "../components/FocusingInput";
 
 const LoginScreen = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  const onLogin = () => {
+    console.log("Email: ", email, "Password: ", password);
+  };
+
   return (
-    <ImageBackground source={BgImage} style={{ width: "100%", height: "100%" }}>
-      <View style={styles.loginContainer}>
-        <Text style={styles.loginText}>Увійти</Text>
-        <TextInput
-          placeholder="Адреса електронної пошти"
-          style={styles.input}
-        ></TextInput>
-        <TextInput placeholder="Пароль" style={styles.input}></TextInput>
-        <TouchableOpacity style={styles.logButton}>
-          <Text style={styles.buttonText}>Увійти</Text>
-        </TouchableOpacity>
-        <Pressable>
-          <Text style={styles.registerText}>
-            Немає акаунту? &nbsp;
-            <Text style={{ textDecorationLine: "underline" }}>
-              Зареєструватися
-            </Text>
-          </Text>
-        </Pressable>
-      </View>
-    </ImageBackground>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <ImageBackground
+        source={BgImage}
+        style={{ width: "100%", height: "100%" }}
+      >
+        <View style={styles.loginContainer}>
+          <KeyboardAvoidingView
+            style={styles.formWrapper}
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+          >
+            <Text style={styles.loginText}>Увійти</Text>
+            <FocusingInput
+              placeholder="Адреса електронної пошти"
+              autoComplete="email"
+              keyboardType="email-address"
+              onChangeText={setEmail}
+              style={[styles.input]}
+            />
+            <View>
+              <FocusingInput
+                placeholder="Пароль"
+                autoComplete="password"
+                secureTextEntry={!showPassword}
+                onChangeText={setPassword}
+                style={styles.input}
+              />
+              <TouchableOpacity
+                style={styles.showPassBtn}
+                onPress={() => setShowPassword((prev) => !prev)}
+              >
+                <Text style={styles.registerText}>
+                  {showPassword ? "Сховати" : "Показати"}
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity style={styles.logButton} onPress={onLogin}>
+              <Text style={styles.buttonText}>Увійти</Text>
+            </TouchableOpacity>
+            <Pressable>
+              <Text style={styles.registerText}>
+                Немає акаунту? &nbsp;
+                <Text style={{ textDecorationLine: "underline" }}>
+                  Зареєструватися
+                </Text>
+              </Text>
+            </Pressable>
+          </KeyboardAvoidingView>
+        </View>
+      </ImageBackground>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -40,8 +82,6 @@ const styles = StyleSheet.create({
   loginContainer: {
     position: "absolute",
     bottom: 0,
-    display: "flex",
-    alignItems: "center",
     width: "100%",
     height: 489,
     paddingTop: 32,
@@ -51,6 +91,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
+  },
+  formWrapper: {
+    display: "flex",
+    alignItems: "center",
   },
   loginText: {
     fontFamily: "Roboto-Bold",
@@ -88,6 +132,11 @@ const styles = StyleSheet.create({
   registerText: {
     ...globalStyles.text,
     color: "#1B4371",
+  },
+  showPassBtn: {
+    position: "absolute",
+    right: 16,
+    top: 15,
   },
 });
 
