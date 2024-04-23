@@ -15,13 +15,14 @@ import { globalStyles } from "../assets/GlobalStyles";
 import { useState } from "react";
 import { FocusingInput } from "../components/FocusingInput";
 
-const LoginScreen = () => {
+const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const onLogin = () => {
     console.log("Email: ", email, "Password: ", password);
+    navigation.navigate("Home");
   };
 
   return (
@@ -63,7 +64,7 @@ const LoginScreen = () => {
             <TouchableOpacity style={styles.logButton} onPress={onLogin}>
               <Text style={styles.buttonText}>Увійти</Text>
             </TouchableOpacity>
-            <Pressable>
+            <Pressable onPress={() => navigation.navigate("Registration")}>
               <Text style={styles.registerText}>
                 Немає акаунту? &nbsp;
                 <Text style={{ textDecorationLine: "underline" }}>

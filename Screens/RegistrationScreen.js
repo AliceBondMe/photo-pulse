@@ -13,11 +13,11 @@ import {
 } from "react-native";
 import BgImage from "../assets/images/background.jpg";
 import { globalStyles } from "../assets/GlobalStyles";
-import AddSVG from "../components/AddSvg";
+import AddSVG from "../assets/icons/AddSvg";
 import { useState } from "react";
 import { FocusingInput } from "../components/FocusingInput";
 
-const RegistrationScreen = () => {
+const RegistrationScreen = ({ navigation }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -25,6 +25,7 @@ const RegistrationScreen = () => {
 
   const onRegister = () => {
     console.log("Username: ", name, "Email: ", email, "Password: ", password);
+    navigation.navigate("Home");
   };
 
   return (
@@ -70,7 +71,7 @@ const RegistrationScreen = () => {
           <TouchableOpacity style={styles.regButton} onPress={onRegister}>
             <Text style={styles.buttonText}>Зареєстуватися</Text>
           </TouchableOpacity>
-          <Pressable>
+          <Pressable onPress={() => navigation.navigate("Login")}>
             <Text style={styles.loginText}>Вже є акаунт? Увійти</Text>
           </Pressable>
 
